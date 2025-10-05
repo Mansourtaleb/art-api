@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9f40e70e-8fbd-4e9b-b587-8d346e1c3cff" name="Changes" comment="" />
+    <list default="true" id="9f40e70e-8fbd-4e9b-b587-8d346e1c3cff" name="Changes" comment="user:register,login,password-reset,verify-email">
+      <change afterPath="$PROJECT_DIR$/artdigital-backend/src/main/java/com/esprit/artdigital_backend/controller/FileController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/artdigital-backend/src/main/java/com/esprit/artdigital_backend/service/FileStorageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/artdigital-backend/src/main/java/com/esprit/artdigital_backend/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/artdigital-backend/src/main/java/com/esprit/artdigital_backend/config/SecurityConfig.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -23,12 +28,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Mansourtaleb/art-api.git",
-    "accountId": "53f53078-acb0-4d7f-bee8-1b94f99c3b22"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Mansourtaleb&quot;
   }
-}]]></component>
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Mansourtaleb/art-api.git&quot;,
+    &quot;accountId&quot;: &quot;53f53078-acb0-4d7f-bee8-1b94f99c3b22&quot;
+  }
+}</component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
@@ -48,6 +59,8 @@
     "Maven.artdigital-backend [install].executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.ArtdigitalBackendApplication.executor": "Run",
     "com.codeium.enabled": "true",
     "dart.analysis.tool.window.visible": "false",
     "git-widget-placeholder": "main",
@@ -93,11 +106,25 @@
       <option name="presentableId" value="Default" />
       <updated>1759665462964</updated>
       <workItem from="1759665465527" duration="34000" />
-      <workItem from="1759665507219" duration="3061000" />
+      <workItem from="1759665507219" duration="6218000" />
+      <workItem from="1759700755402" duration="64000" />
     </task>
+    <task id="LOCAL-00001" summary="user:register,login,password-reset,verify-email">
+      <option name="closed" value="true" />
+      <created>1759669508582</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1759669508582</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="user:register,login,password-reset,verify-email" />
+    <option name="LAST_COMMIT_MESSAGE" value="user:register,login,password-reset,verify-email" />
   </component>
 </project>

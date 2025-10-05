@@ -57,8 +57,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/bannieres/**").hasRole("ADMIN")
 
                         // Files - GET public, POST/DELETE protégé
-                        .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()
-                        .requestMatchers("/api/files/**").authenticated()
+                        .requestMatchers("/api/files/**").permitAll()
 
                         // Swagger
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
