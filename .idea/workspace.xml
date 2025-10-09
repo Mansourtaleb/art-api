@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9f40e70e-8fbd-4e9b-b587-8d346e1c3cff" name="Changes" comment="user:register,login,password-reset,verify-email">
-      <change afterPath="$PROJECT_DIR$/artdigital-backend/src/main/java/com/esprit/artdigital_backend/controller/FileController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/artdigital-backend/src/main/java/com/esprit/artdigital_backend/service/FileStorageService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/artdigital-backend/src/main/java/com/esprit/artdigital_backend/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/artdigital-backend/src/main/java/com/esprit/artdigital_backend/config/SecurityConfig.java" afterDir="false" />
-    </list>
+    <list default="true" id="9f40e70e-8fbd-4e9b-b587-8d346e1c3cff" name="Changes" comment="user:register,login,password-reset,verify-email" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -53,28 +48,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Maven.artdigital-backend [clean].executor": "Run",
-    "Maven.artdigital-backend [install].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "Spring Boot.ArtdigitalBackendApplication.executor": "Run",
-    "com.codeium.enabled": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "show.migrate.to.gradle.popup": "false",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Maven.artdigital-backend [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.artdigital-backend [install].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.ArtdigitalBackendApplication.executor&quot;: &quot;Run&quot;,
+    &quot;com.codeium.enabled&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\mansh\OneDrive\Desktop\ekher mara\artdigital-backend\artdigital-backend" />
@@ -108,6 +103,7 @@
       <workItem from="1759665465527" duration="34000" />
       <workItem from="1759665507219" duration="6218000" />
       <workItem from="1759700755402" duration="64000" />
+      <workItem from="1760016851158" duration="51000" />
     </task>
     <task id="LOCAL-00001" summary="user:register,login,password-reset,verify-email">
       <option name="closed" value="true" />

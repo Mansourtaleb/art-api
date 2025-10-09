@@ -5,6 +5,7 @@ import com.esprit.artdigital_backend.dto.request.*;
 import com.esprit.artdigital_backend.dto.response.AuthResponse;
 import com.esprit.artdigital_backend.model.Utilisateur;
 import com.esprit.artdigital_backend.model.enums.RoleUtilisateur;
+import com.esprit.artdigital_backend.repository.UtilisateurRepository;
 import com.esprit.artdigital_backend.service.UtilisateurService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UtilisateurRepository utilisateurRepository;
 
     @Autowired
     private UtilisateurService utilisateurService;
@@ -26,8 +34,8 @@ public class AuthController {
     @Autowired
     private JwtTokenProvider tokenProvider;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+
+
 
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> register(@Valid @RequestBody RegisterRequest request) {
@@ -110,4 +118,5 @@ public class AuthController {
         utilisateurService.resetPassword(dto.getToken(), dto.getNewPassword());
         return ResponseEntity.ok(Map.of("message", "Mot de passe réinitialisé avec succès"));
     }
+
 }
