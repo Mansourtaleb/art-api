@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn clean:*)",
+      "Bash(mvn spring-boot:run:*)",
+      "Bash(timeout:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(cmd.exe /c \"taskkill /F /PID 18992\")",
+      "Read(//c/Users/mansh/OneDrive/Desktop/ekher mara/**)",
+      "Bash(git clone:*)",
+      "Bash(npm install)",
+      "Bash(npm run build)",
+      "Bash(npm start)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
