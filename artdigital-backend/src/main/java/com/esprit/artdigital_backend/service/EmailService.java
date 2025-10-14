@@ -28,6 +28,9 @@ public class EmailService {
     @Value("${app.email.fallback-to-console:true}")
     private boolean fallbackToConsole;
 
+    @Value("${spring.mail.from:no-reply@printdigital.tn}")
+    private String fromEmail;
+
     public String generateVerificationCode() {
         Random random = new Random();
         int code = 100000 + random.nextInt(900000);
@@ -35,58 +38,91 @@ public class EmailService {
     }
 
     public void sendVerificationEmail(String toEmail, String code) {
-        String subject = "✅ Vérification de votre compte Art Digital";
+        String subject = "✅ Vérification de votre compte Print&Digital";
         String text = "Bonjour,\n\n"
-                + "Bienvenue sur Art Digital!\n\n"
+                + "Bienvenue sur Print&Digital - Votre imprimerie digitale de confiance!\n\n"
                 + "Votre code de vérification est: " + code + "\n\n"
                 + "Ce code est valide pendant 24 heures.\n\n"
                 + "Si vous n'avez pas créé de compte, ignorez ce message.\n\n"
-                + "Cordialement,\nL'équipe Art Digital";
+                + "Cordialement,\nL'équipe Print&Digital";
 
         sendEmail(toEmail, subject, text, "Code de vérification: " + code);
     }
 
     public void sendResetPasswordEmail(String toEmail, String code) {
-        String subject = "🔐 Réinitialisation de votre mot de passe Art Digital";
+        String subject = "🔐 Réinitialisation de votre mot de passe Print&Digital";
         String text = "Bonjour,\n\n"
                 + "Vous avez demandé à réinitialiser votre mot de passe.\n\n"
                 + "Votre code de réinitialisation est: " + code + "\n\n"
                 + "Ce code est valide pendant 1 heure.\n\n"
                 + "Si vous n'avez pas fait cette demande, ignorez ce message.\n\n"
-                + "Cordialement,\nL'équipe Art Digital";
+                + "Cordialement,\nL'équipe Print&Digital";
 
         sendEmail(toEmail, subject, text, "Code de reset: " + code);
     }
 
+    public void sendCommandeConfirmation(String toEmail, String commandeId, String clientNom) {
+        String subject = "✅ Confirmation de commande #" + commandeId;
+        String text = "Bonjour " + clientNom + ",\n\n"
+                + "Votre commande #" + commandeId + " a été confirmée avec succès!\n\n"
+                + "Vous pouvez suivre l'état de votre commande dans votre espace client:\n"
+                + frontendUrl + "/mes-commandes\n\n"
+                + "Merci de votre confiance!\n\n"
+                + "Cordialement,\nL'équipe Print&Digital";
+
+        sendEmail(toEmail, subject, text, "Commande confirmée: " + commandeId);
+    }
+
+    public void sendCommandeExpediee(String toEmail, String commandeId, String clientNom) {
+        String subject = "📦 Votre commande a été expédiée #" + commandeId;
+        String text = "Bonjour " + clientNom + ",\n\n"
+                + "Bonne nouvelle! Votre commande #" + commandeId + " a été expédiée.\n\n"
+                + "Vous devriez la recevoir sous 2-3 jours ouvrables.\n\n"
+                + "Suivez votre commande: " + frontendUrl + "/mes-commandes/" + commandeId + "\n\n"
+                + "Cordialement,\nL'équipe Print&Digital";
+
+        sendEmail(toEmail, subject, text, "Commande expédiée: " + commandeId);
+    }
+
+    public void sendRetourDemande(String toEmail, String retourId, String clientNom) {
+        String subject = "📋 Demande de retour enregistrée #" + retourId;
+        String text = "Bonjour " + clientNom + ",\n\n"
+                + "Votre demande de retour #" + retourId + " a été enregistrée.\n\n"
+                + "Notre équipe va l'examiner dans les plus brefs délais.\n"
+                + "Vous recevrez une réponse sous 48h.\n\n"
+                + "Cordialement,\nL'équipe Print&Digital";
+
+        sendEmail(toEmail, subject, text, "Retour demandé: " + retourId);
+    }
+
     private void sendEmail(String toEmail, String subject, String text, String logMessage) {
         if (!emailEnabled) {
-            log.info("📧 EMAILS DÉSACTIVÉS - {} pour {}", logMessage, toEmail);
+            log.info("📧 Email désactivé - {}", logMessage);
             return;
         }
 
-        if (mailSender != null) {
-            try {
+        try {
+            if (mailSender != null) {
                 SimpleMailMessage message = new SimpleMailMessage();
+                message.setFrom(fromEmail);
                 message.setTo(toEmail);
                 message.setSubject(subject);
                 message.setText(text);
-                message.setFrom("no-reply@artdigital.com");
 
                 mailSender.send(message);
-                log.info("✅ Email envoyé à {}: {}", toEmail, subject);
-                return;
-            } catch (MailException ex) {
-                log.warn("❌ Erreur SMTP pour {}: {}", toEmail, ex.getMessage());
+                log.info("✅ Email envoyé avec succès à {} - {}", toEmail, logMessage);
+            } else {
+                throw new IllegalStateException("MailSender non configuré");
             }
-        }
+        } catch (Exception e) {
+            // ✅ CORRECTION : Un seul catch pour toutes les exceptions
+            log.error("❌ Erreur lors de l'envoi de l'email à {}: {}", toEmail, e.getMessage());
 
-        if (fallbackToConsole) {
-            log.info("📧 EMAIL SIMULÉ - {} pour {}", logMessage, toEmail);
-            log.info("=== EMAIL SIMULÉ ===");
-            log.info("À: {}", toEmail);
-            log.info("Sujet: {}", subject);
-            log.info("Contenu: {}", text.replace("\n", " | "));
-            log.info("====================");
+            if (fallbackToConsole) {
+                log.info("📧 FALLBACK CONSOLE - Email pour {}", toEmail);
+                log.info("Subject: {}", subject);
+                log.info("Body:\n{}", text);
+            }
         }
     }
 }

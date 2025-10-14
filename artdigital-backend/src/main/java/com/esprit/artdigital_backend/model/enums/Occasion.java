@@ -1,66 +1,39 @@
 package com.esprit.artdigital_backend.model.enums;
 
+import lombok.Getter;
+
 /**
- * Énumération des occasions/événements pour les produits et packs thématiques
- * Utilisé par ArtStore Bizerte pour gérer les produits saisonniers
+ * Énumération des occasions pour les packs
  */
+@Getter
 public enum Occasion {
-    ST_VALENTIN("Saint-Valentin", 2, "❤️"),
-    FETE_MERES("Fête des Mères", 5, "👩"),
-    FETE_PERES("Fête des Pères", 6, "👨"),
-    ANNIVERSAIRE("Anniversaire", 0, "🎂"),
-    MARIAGE("Mariage", 0, "💍"),
-    NAISSANCE("Naissance", 0, "👶"),
-    NOEL("Noël", 12, "🎄"),
-    EID("Aïd", 0, "🌙"),
-    RAMADAN("Ramadan", 0, "🕌"),
-    RENTREE_SCOLAIRE("Rentrée Scolaire", 9, "🎒"),
-    DIPLOME("Diplôme", 6, "🎓"),
-    RETRAITE("Retraite", 0, "🎉"),
-    HALLOWEEN("Halloween", 10, "🎃"),
-    TOUTE_OCCASION("Toute Occasion", 0, "✨");
+    MARIAGE("Mariage", "Pack complet pour mariage"),
+    NAISSANCE("Naissance", "Pack pour annoncer une naissance"),
+    ANNIVERSAIRE("Anniversaire", "Pack anniversaire festif"),
+    ENTREPRISE("Entreprise", "Pack professionnel entreprise"),
+    ETUDIANT("Étudiant", "Pack spécial étudiants"),
+    STARTUP("Startup", "Pack pour startups"),
+    EVENEMENT("Événement", "Pack pour événements divers"),
+    SAINT_VALENTIN("Saint-Valentin", "Pack romantique"),
+    FETE_MERES("Fête des Mères", "Pack cadeau fête des mères"),
+    FETE_PERES("Fête des Pères", "Pack cadeau fête des pères"),
+    RAMADAN("Ramadan", "Pack spécial Ramadan"),
+    AID("Aïd", "Pack spécial Aïd"),
+    RENTREE_SCOLAIRE("Rentrée scolaire", "Pack rentrée des classes"),
+    NOEL("Noël", "Pack spécial Noël"),
+    NOUVEL_AN("Nouvel An", "Pack réveillon"),
+    AUTRE("Autre", "Autre occasion");
 
-    private final String libelle;
-    private final int moisPrincipal;
-    private final String emoji;
+    private final String nom;
+    private final String description;
 
-    Occasion(String libelle, int moisPrincipal, String emoji) {
-        this.libelle = libelle;
-        this.moisPrincipal = moisPrincipal;
-        this.emoji = emoji;
-    }
-
-    public String getLibelle() {
-        return libelle;
-    }
-
-    public int getMoisPrincipal() {
-        return moisPrincipal;
-    }
-
-    public String getEmoji() {
-        return emoji;
-    }
-
-    public boolean estDeSaison(int moisActuel) {
-        if (moisPrincipal == 0) {
-            return true;
-        }
-        return moisActuel == moisPrincipal || moisActuel == (moisPrincipal - 1);
-    }
-
-    public static java.util.List<Occasion> occasionsDuMois(int mois) {
-        java.util.List<Occasion> occasions = new java.util.ArrayList<>();
-        for (Occasion occasion : values()) {
-            if (occasion.estDeSaison(mois)) {
-                occasions.add(occasion);
-            }
-        }
-        return occasions;
+    Occasion(String nom, String description) {
+        this.nom = nom;
+        this.description = description;
     }
 
     @Override
     public String toString() {
-        return libelle + " " + emoji;
+        return nom;
     }
 }
