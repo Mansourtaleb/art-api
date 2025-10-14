@@ -1,43 +1,43 @@
 package com.esprit.artdigital_backend.model.enums;
 
-/**
- * Catégories de designs prédéfinis disponibles dans la bibliothèque
- */
-public enum CategorieDesign {
-    CITATION("Citations", "Citations motivantes, inspirantes, drôles"),
-    AMOUR("Amour & Romance", "Designs pour couples, Saint-Valentin"),
-    FAMILLE("Famille", "Maman, Papa, Enfants, Famille"),
-    GAMING("Gaming", "Jeux vidéo, Esports, Geek"),
-    SPORT("Sport", "Football, Basketball, Fitness"),
-    HUMOUR("Humour", "Designs drôles, mèmes"),
-    NATURE("Nature", "Fleurs, Animaux, Paysages"),
-    ABSTRAIT("Abstrait", "Designs géométriques, artistiques"),
-    MINIMALISTE("Minimaliste", "Designs simples, épurés"),
-    VINTAGE("Vintage", "Style rétro, années 80/90"),
-    PROFESSIONNEL("Professionnel", "Designs pour entreprises, logos"),
-    ENFANTS("Enfants", "Dessins animés, personnages mignons"),
-    RELIGION("Religion", "Designs religieux, spirituels"),
-    PATRIOTIQUE("Patriotique", "Drapeau tunisien, fierté nationale"),
-    AUTRES("Autres", "Designs divers");
+import lombok.Getter;
 
-    private final String libelle;
+/**
+ * Énumération des catégories de designs
+ */
+@Getter
+public enum CategorieDesign {
+    ART_ABSTRAIT("Art Abstrait", "Designs abstraits et modernes"),
+    GEOMETRIQUE("Géométrique", "Formes géométriques et patterns"),
+    NATURE("Nature", "Fleurs, paysages, nature"),
+    ANIMAL("Animal", "Animaux et créatures"),
+    TYPOGRAPHIE("Typographie", "Citations et textes stylisés"),
+    MINIMALISTE("Minimaliste", "Designs épurés et simples"),
+    VINTAGE("Vintage", "Style rétro et vintage"),
+    MODERNE("Moderne", "Style contemporain"),
+    ENFANT("Enfant", "Designs pour enfants"),
+    SPORT("Sport", "Thèmes sportifs"),
+    MUSIQUE("Musique", "Thèmes musicaux"),
+    GAMING("Gaming", "Jeux vidéo et gaming"),
+    CINEMA("Cinéma", "Films et séries"),
+    PROFESSIONNEL("Professionnel", "Designs corporate"),
+    FETE("Fête", "Anniversaires et célébrations"),
+    MARIAGE("Mariage", "Thème mariage"),
+    NAISSANCE("Naissance", "Thème naissance"),
+    HUMOUR("Humour", "Designs drôles"),
+    INSPIRANT("Inspirant", "Citations inspirantes"),
+    CALLIGRAPHIE("Calligraphie", "Calligraphie arabe/française");
+
+    private final String nom;
     private final String description;
 
-    CategorieDesign(String libelle, String description) {
-        this.libelle = libelle;
+    CategorieDesign(String nom, String description) {
+        this.nom = nom;
         this.description = description;
-    }
-
-    public String getLibelle() {
-        return libelle;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     @Override
     public String toString() {
-        return libelle;
+        return nom;
     }
 }

@@ -74,23 +74,24 @@ public class UtilisateurController {
         utilisateurService.deleteUtilisateur(id);
         return ResponseEntity.noContent().build();
     }
-
-    @PutMapping("/{id}/password")
+    @PostMapping("/{id}/change-password")
     public ResponseEntity<Map<String, String>> changePassword(
             @PathVariable String id,
             @RequestBody Map<String, String> request,
             Authentication authentication) {
+
         if (!authentication.getName().equals(id)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        utilisateurService.changePassword(
-                id,
-                request.get("ancienMotDePasse"),
-                request.get("nouveauMotDePasse")
-        );
+        String ancienMotDePasse = request.get("ancienMotDePasse");
+        String nouveauMotDePasse = request.get("nouveauMotDePasse");
 
-        return ResponseEntity.ok(Map.of("message", "Mot de passe modifié avec succès"));
+        utilisateurService.changePassword(id, ancienMotDePasse, nouveauMotDePasse);
+
+        return ResponseEntity.ok(Map.of(
+                "message", "Mot de passe modifié avec succès"
+        ));
     }
 
     @GetMapping("/{id}/adresses")

@@ -20,6 +20,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
     @Autowired
@@ -33,9 +34,6 @@ public class AuthController {
 
     @Autowired
     private JwtTokenProvider tokenProvider;
-
-
-
 
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> register(@Valid @RequestBody RegisterRequest request) {
@@ -57,66 +55,77 @@ public class AuthController {
         ));
     }
 
-    @PostMapping("/verify-email")
-    public ResponseEntity<AuthResponse> verifyEmail(@Valid @RequestBody VerifyEmailRequest request) {
-        Utilisateur utilisateur = utilisateurService.verifyEmail(request.getCode());
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
+        Optional<Utilisateur> userOpt = utilisateurRepository.findByEmail(request.getEmail());
 
-        String token = tokenProvider.generateToken(
-                utilisateur.getId(),
-                utilisateur.getEmail(),
-                utilisateur.getRole()
+        if (userOpt.isEmpty()) {
+            throw new BadCredentialsException("Email ou mot de passe incorrect");
+        }
+
+        Utilisateur user = userOpt.get();
+
+        if (!passwordEncoder.matches(request.getMotDePasse(), user.getMotDePasse())) {
+            throw new BadCredentialsException("Email ou mot de passe incorrect");
+        }
+
+        if (!user.getEmailVerifie()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of(
+                    "error", "Email non vérifié",
+                    "message", "Veuillez vérifier votre email avant de vous connecter"
+            ));
+        }
+
+        // ✅ CORRECTION : Convertir RoleUtilisateur en String
+        String token = tokenProvider.generateToken(user.getId(), user.getRole().name(), user.getRole());
+        AuthResponse response = new AuthResponse(
+                token,
+                user.getId(),
+                user.getNom(),
+                user.getEmail(),
+                user.getRole()
         );
 
-        return ResponseEntity.ok(new AuthResponse(
-                token,
-                utilisateur.getId(),
-                utilisateur.getNom(),
-                utilisateur.getEmail(),
-                utilisateur.getRole(),
-                utilisateur.getEmailVerifie()
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/verify-email")
+    public ResponseEntity<Map<String, String>> verifyEmail(@RequestBody Map<String, String> request) {
+        String code = request.get("code");
+        Utilisateur utilisateur = utilisateurService.verifyEmail(code);
+
+        return ResponseEntity.ok(Map.of(
+                "message", "Email vérifié avec succès",
+                "userId", utilisateur.getId()
         ));
     }
 
     @PostMapping("/resend-verification")
-    public ResponseEntity<Map<String, String>> resendVerificationCode(@RequestBody Map<String, String> request) {
-        utilisateurService.generateAndSendVerificationCode(request.get("email"));
-        return ResponseEntity.ok(Map.of("message", "Code de vérification renvoyé"));
-    }
+    public ResponseEntity<Map<String, String>> resendVerification(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        utilisateurService.generateAndSendVerificationCode(email);
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
-        Utilisateur utilisateur = utilisateurService.getUtilisateurByEmail(request.getEmail());
-
-        if (!passwordEncoder.matches(request.getMotDePasse(), utilisateur.getMotDePasse())) {
-            throw new BadCredentialsException("Email ou mot de passe incorrect");
-        }
-
-        String token = tokenProvider.generateToken(
-                utilisateur.getId(),
-                utilisateur.getEmail(),
-                utilisateur.getRole()
-        );
-
-        return ResponseEntity.ok(new AuthResponse(
-                token,
-                utilisateur.getId(),
-                utilisateur.getNom(),
-                utilisateur.getEmail(),
-                utilisateur.getRole(),
-                utilisateur.getEmailVerifie()
+        return ResponseEntity.ok(Map.of(
+                "message", "Un nouveau code de vérification a été envoyé à votre email"
         ));
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<Map<String, String>> forgotPassword(@Valid @RequestBody RequestResetPasswordDTO request) {
-        utilisateurService.generateResetCode(request.getEmail());
-        return ResponseEntity.ok(Map.of("message", "Un code de réinitialisation a été envoyé à votre email"));
+    public ResponseEntity<Map<String, String>> forgotPassword(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        utilisateurService.generateResetCode(email);
+
+        return ResponseEntity.ok(Map.of(
+                "message", "Un code de réinitialisation a été envoyé à votre email"
+        ));
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordDTO dto) {
-        utilisateurService.resetPassword(dto.getToken(), dto.getNewPassword());
-        return ResponseEntity.ok(Map.of("message", "Mot de passe réinitialisé avec succès"));
-    }
+    public ResponseEntity<Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        utilisateurService.resetPassword(request.getCode(), request.getNouveauMotDePasse());
 
+        return ResponseEntity.ok(Map.of(
+                "message", "Mot de passe réinitialisé avec succès"
+        ));
+    }
 }

@@ -12,18 +12,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterRequest {
-    @NotBlank(message = "Le nom est requis")
+
+    @NotBlank(message = "Le nom est obligatoire")
     private String nom;
 
-    @NotBlank(message = "L'email est requis")
-    @Email(message = "Email invalide")
+    @NotBlank(message = "L'email est obligatoire")
+    @Email(message = "L'email doit être valide")
     private String email;
 
-    @NotBlank(message = "Le mot de passe est requis")
+    @NotBlank(message = "Le mot de passe est obligatoire")
     @Size(min = 6, message = "Le mot de passe doit contenir au moins 6 caractères")
     private String motDePasse;
 
-    private String telephone;
-
     private RoleUtilisateur role;
+
+    private String telephone;
 }
