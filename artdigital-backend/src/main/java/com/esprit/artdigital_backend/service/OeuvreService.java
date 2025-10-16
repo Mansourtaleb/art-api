@@ -1,18 +1,21 @@
 package com.esprit.artdigital_backend.service;
 
 import com.esprit.artdigital_backend.dto.filter.OeuvreFilterDTO;
+import com.esprit.artdigital_backend.dto.request.OeuvreRequest;
 import com.esprit.artdigital_backend.dto.response.OeuvreResponse;
 import com.esprit.artdigital_backend.exception.ResourceNotFoundException;
 import com.esprit.artdigital_backend.exception.UnauthorizedException;
+import com.esprit.artdigital_backend.model.Categorie;
 import com.esprit.artdigital_backend.model.Oeuvre;
 import com.esprit.artdigital_backend.model.embedded.AvisOeuvre;
 import com.esprit.artdigital_backend.model.enums.RoleUtilisateur;
+import com.esprit.artdigital_backend.model.enums.StatutOeuvre;
+import com.esprit.artdigital_backend.repository.CategorieRepository;
 import com.esprit.artdigital_backend.repository.OeuvreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,12 +27,46 @@ public class OeuvreService {
 
     @Autowired
     private UtilisateurService utilisateurService;
+    @Autowired
+    private CategorieRepository categorieRepository;
 
-    public Oeuvre creerOeuvre(Oeuvre oeuvre, String userId) {
-        var utilisateur = utilisateurService.getUtilisateurById(userId);
-        oeuvre.setArtisteId(userId);
-        oeuvre.setArtisteNom(utilisateur.getNom());
-        return oeuvreRepository.save(oeuvre);
+    public Oeuvre creerOeuvre(OeuvreRequest request, String artisteId) {
+        // Vérifier que la catégorie existe
+        Categorie categorie = categorieRepository.findById(request.getCategorieId())
+                .orElseThrow(() -> new RuntimeException("Catégorie non trouvée"));
+
+        System.out.println("✅ Catégorie trouvée: " + categorie.getNom() + " (ID: " + categorie.getId() + ")");
+
+        // Créer l'œuvre avec le NOM de la catégorie (pas l'ID !)
+        Oeuvre oeuvre = new Oeuvre(
+                request.getTitre(),
+                request.getDescription(),
+                categorie.getNom(), // ← IMPORTANT : Nom, pas ID
+                request.getPrix(),
+                request.getQuantiteDisponible(),
+                artisteId,
+                null
+        );
+
+        // Associer la référence MongoDB
+        oeuvre.setCategorieRef(categorie);
+
+        // Images
+        if (request.getImages() != null && !request.getImages().isEmpty()) {
+            oeuvre.setImages(request.getImages());
+        }
+
+        // Statut
+        if (request.getStatut() != null) {
+            oeuvre.setStatut(request.getStatut());
+        } else {
+            oeuvre.setStatut(StatutOeuvre.PUBLIE);
+        }
+
+        Oeuvre saved = oeuvreRepository.save(oeuvre);
+        System.out.println("✅ Sauvegardé: categorie=" + saved.getCategorie());
+
+        return saved;
     }
 
     public Oeuvre getOeuvreById(String id) {

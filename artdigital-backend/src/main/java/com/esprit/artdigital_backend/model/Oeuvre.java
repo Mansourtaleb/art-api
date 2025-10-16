@@ -5,6 +5,7 @@ import com.esprit.artdigital_backend.model.enums.StatutOeuvre;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
@@ -31,6 +32,8 @@ public class Oeuvre {
     private LocalDateTime dateCreation;
     private List<AvisOeuvre> avis = new ArrayList<>();
     private Double notemoyenne;
+    @DBRef
+    private Categorie categorieRef;
 
     public Oeuvre(String titre, String description, String categorie, BigDecimal prix,
                   Integer quantiteDisponible, String artisteId, String artisteNom) {
@@ -64,4 +67,5 @@ public class Oeuvre {
                 .orElse(0.0);
         this.notemoyenne = Math.round(moyenne * 10.0) / 10.0;
     }
+
 }

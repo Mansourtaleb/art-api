@@ -37,7 +37,7 @@ db.utilisateurs.insertMany([
         emailVerifie: true,
         adresses: [
             {
-                rue: "15 Avenue Habib Bourguiba",
+                adresse: "15 Avenue Habib Bourguiba",
                 ville: "Tunis",
                 codePostal: "1000",
                 pays: "Tunisie",
@@ -151,9 +151,8 @@ print("✅ Oeuvres créées");
 db.bannieres.insertMany([
     {
         titre: "Promotion Ramadan",
-        description: "Réductions jusqu'à 30%",
         imageUrl: "https://placehold.co/1200x400/ec4899/ffffff?text=Promo+Ramadan",
-        lien: "/oeuvres",
+        lienVers: "/oeuvres",
         typeLien: "EXTERNE",
         actif: true,
         ordre: 1,
@@ -162,9 +161,8 @@ db.bannieres.insertMany([
     },
     {
         titre: "Nouvelle Collection",
-        description: "Découvrez nos dernières créations",
         imageUrl: "https://placehold.co/1200x400/8b5cf6/ffffff?text=Nouvelle+Collection",
-        lien: "/oeuvres?categorie=Art+Moderne",
+        lienVers: "/oeuvres?categorie=Art+Moderne",
         typeLien: "EXTERNE",
         actif: true,
         ordre: 2,

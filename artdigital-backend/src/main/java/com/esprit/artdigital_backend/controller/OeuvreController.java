@@ -67,24 +67,8 @@ public class OeuvreController {
             Authentication authentication) {
         String userId = authentication.getName();
 
-        Oeuvre oeuvre = new Oeuvre(
-                request.getTitre(),
-                request.getDescription(),
-                request.getCategorie(),
-                request.getPrix(),
-                request.getQuantiteDisponible(),
-                userId,
-                null
-        );
-
-        if (request.getImages() != null) {
-            oeuvre.setImages(request.getImages());
-        }
-        if (request.getStatut() != null) {
-            oeuvre.setStatut(request.getStatut());
-        }
-
-        Oeuvre nouvelleOeuvre = oeuvreService.creerOeuvre(oeuvre, userId);
+        // ✅ CORRECTION : Créer l'œuvre avec le categorieId
+        Oeuvre nouvelleOeuvre = oeuvreService.creerOeuvre(request, userId);
         OeuvreResponse response = oeuvreService.convertToResponse(nouvelleOeuvre);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
