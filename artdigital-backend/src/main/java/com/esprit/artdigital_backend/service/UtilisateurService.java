@@ -83,12 +83,12 @@ public class UtilisateurService {
     public void generateAndSendVerificationCode(String email) {
         Utilisateur utilisateur = getUtilisateurByEmail(email);
 
-        String code = emailService.generateVerificationCode();
-        utilisateur.setCodeVerification(code);
+        String token = emailService.generateEmailVerificationToken();
+        utilisateur.setCodeVerification(token);
         utilisateur.setCodeVerificationExpiration(LocalDateTime.now().plusHours(24));
         utilisateurRepository.save(utilisateur);
 
-        emailService.sendVerificationEmail(email, code);
+        emailService.sendVerificationEmail(email, token);
     }
 
     public Utilisateur verifyEmail(String code) {
@@ -146,6 +146,7 @@ public class UtilisateurService {
         utilisateur.setMotDePasse(passwordEncoder.encode(nouveauMotDePasse));
         utilisateurRepository.save(utilisateur);
     }
+
 
     public UtilisateurResponse convertToResponse(Utilisateur utilisateur) {
         return new UtilisateurResponse(

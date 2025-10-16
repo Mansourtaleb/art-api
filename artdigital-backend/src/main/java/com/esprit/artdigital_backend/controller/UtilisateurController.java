@@ -3,6 +3,7 @@ package com.esprit.artdigital_backend.controller;
 import com.esprit.artdigital_backend.dto.response.UtilisateurResponse;
 import com.esprit.artdigital_backend.model.Utilisateur;
 import com.esprit.artdigital_backend.model.embedded.AdresseLivraison;
+import com.esprit.artdigital_backend.repository.UtilisateurRepository;
 import com.esprit.artdigital_backend.service.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,8 @@ public class UtilisateurController {
 
     @Autowired
     private UtilisateurService utilisateurService;
+    @Autowired
+    private UtilisateurRepository utilisateurRepository;
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -74,7 +77,7 @@ public class UtilisateurController {
         utilisateurService.deleteUtilisateur(id);
         return ResponseEntity.noContent().build();
     }
-    @PostMapping("/{id}/change-password")
+    @PutMapping("/{id}/change-password")
     public ResponseEntity<Map<String, String>> changePassword(
             @PathVariable String id,
             @RequestBody Map<String, String> request,
@@ -117,9 +120,11 @@ public class UtilisateurController {
 
         Utilisateur utilisateur = utilisateurService.getUtilisateurById(id);
         utilisateur.ajouterAdresse(adresse);
-        utilisateurService.updateUtilisateur(id, utilisateur);
 
-        return ResponseEntity.ok(utilisateur.getAdresses());
+        // ✅ CORRECTION : Sauvegarder directement sans passer par updateUtilisateur
+        Utilisateur saved = utilisateurRepository.save(utilisateur);
+
+        return ResponseEntity.ok(saved.getAdresses());
     }
 
     @DeleteMapping("/{id}/adresses/{index}")

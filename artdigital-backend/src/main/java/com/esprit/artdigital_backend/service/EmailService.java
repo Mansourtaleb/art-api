@@ -4,12 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.Random;
+import java.util.Base64;
 
 @Service
 public class EmailService {
@@ -21,6 +24,9 @@ public class EmailService {
 
     @Value("${app.frontend.url:http://localhost:4200}")
     private String frontendUrl;
+
+    @Value("${app.base-url:http://localhost:8080}")
+    private String backendBaseUrl;
 
     @Value("${app.email.enabled:true}")
     private boolean emailEnabled;
@@ -37,16 +43,27 @@ public class EmailService {
         return String.valueOf(code);
     }
 
-    public void sendVerificationEmail(String toEmail, String code) {
+    // Génère un token URL-safe et suffisamment long pour la vérification par lien
+    public String generateEmailVerificationToken() {
+        byte[] bytes = new byte[32]; // 256 bits
+        new SecureRandom().nextBytes(bytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+    }
+
+    public void sendVerificationEmail(String toEmail, String token) {
         String subject = "✅ Vérification de votre compte Print&Digital";
+        String verifyUrl = backendBaseUrl + "/api/auth/verify-email?token=" +
+                URLEncoder.encode(token, StandardCharsets.UTF_8);
+
         String text = "Bonjour,\n\n"
                 + "Bienvenue sur Print&Digital - Votre imprimerie digitale de confiance!\n\n"
-                + "Votre code de vérification est: " + code + "\n\n"
-                + "Ce code est valide pendant 24 heures.\n\n"
+                + "Cliquez sur le lien ci-dessous pour vérifier votre email :\n"
+                + verifyUrl + "\n\n"
+                + "Ce lien est valide pendant 24 heures.\n\n"
                 + "Si vous n'avez pas créé de compte, ignorez ce message.\n\n"
                 + "Cordialement,\nL'équipe Print&Digital";
 
-        sendEmail(toEmail, subject, text, "Code de vérification: " + code);
+        sendEmail(toEmail, subject, text, "Lien de vérification envoyé");
     }
 
     public void sendResetPasswordEmail(String toEmail, String code) {

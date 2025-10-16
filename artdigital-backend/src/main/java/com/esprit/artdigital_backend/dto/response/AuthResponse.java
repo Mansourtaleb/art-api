@@ -14,4 +14,13 @@ public class AuthResponse {
     private String nom;
     private String email;
     private RoleUtilisateur role;
+    private Boolean emailVerifie;
+    public AuthResponse(String token, String userId, String nom, String email, RoleUtilisateur role) {
+        this.token = token;
+        this.userId = userId;
+        this.nom = nom;
+        this.email = email;
+        this.role = role;
+        this.emailVerifie = true;
+    }
 }
