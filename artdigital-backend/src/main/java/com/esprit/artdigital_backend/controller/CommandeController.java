@@ -16,7 +16,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/commandes")
@@ -25,6 +27,24 @@ public class CommandeController {
     @Autowired
     private CommandeService commandeService;
 
+    // NOUVEAU - Mes commandes (Client)
+    @GetMapping("/mes-commandes")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<List<CommandeResponse>> getMesCommandes(Authentication authentication) {
+        String userId = authentication.getName();
+
+        // Utiliser le filtre avec clientId = userId
+        CommandeFilterDTO filter = new CommandeFilterDTO(userId, null, 0, 100);
+        Page<CommandeResponse> commandes = commandeService.getAllCommandes(
+                filter,
+                userId,
+                RoleUtilisateur.CLIENT
+        );
+
+        return ResponseEntity.ok(commandes.getContent());
+    }
+
+    // Liste toutes les commandes (Admin) ou filtrées
     @GetMapping
     public ResponseEntity<Page<CommandeResponse>> getAllCommandes(
             @RequestParam(required = false) String clientId,
@@ -43,6 +63,7 @@ public class CommandeController {
         return ResponseEntity.ok(commandes);
     }
 
+    // Détails d'une commande
     @GetMapping("/{id}")
     public ResponseEntity<CommandeResponse> getCommandeById(
             @PathVariable String id,
@@ -57,6 +78,7 @@ public class CommandeController {
         return ResponseEntity.ok(commandeService.convertToResponse(commande));
     }
 
+    // Créer une commande
     @PostMapping
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<CommandeResponse> creerCommande(
@@ -68,7 +90,8 @@ public class CommandeController {
         return new ResponseEntity<>(commandeService.convertToResponse(commande), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}/statut")
+    // CORRIGÉ - Changer statut (PATCH au lieu de PUT)
+    @PatchMapping("/{id}/statut")
     @PreAuthorize("hasAnyRole('ADMIN', 'ARTISTE')")
     public ResponseEntity<CommandeResponse> updateStatutCommande(
             @PathVariable String id,
@@ -82,6 +105,18 @@ public class CommandeController {
 
         StatutCommande nouveauStatut = StatutCommande.valueOf(request.get("statut"));
         Commande commande = commandeService.updateStatutCommande(id, nouveauStatut, userId, role);
+        return ResponseEntity.ok(commandeService.convertToResponse(commande));
+    }
+
+    // NOUVEAU - Annuler une commande (Client)
+    @PatchMapping("/{id}/annuler")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<CommandeResponse> annulerCommande(
+            @PathVariable String id,
+            Authentication authentication) {
+
+        String userId = authentication.getName();
+        Commande commande = commandeService.annulerCommande(id, userId);
         return ResponseEntity.ok(commandeService.convertToResponse(commande));
     }
 }

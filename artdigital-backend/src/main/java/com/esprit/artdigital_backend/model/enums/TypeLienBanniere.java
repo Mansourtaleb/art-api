@@ -1,7 +1,8 @@
 package com.esprit.artdigital_backend.model.enums;
 
 public enum TypeLienBanniere {
-    OEUVRE,
+    INTERNE,
+    EXTERNE,
     CATEGORIE,
-    EXTERNE
+    OEUVRE
 }

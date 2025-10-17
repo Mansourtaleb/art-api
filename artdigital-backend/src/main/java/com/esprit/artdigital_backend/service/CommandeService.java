@@ -127,7 +127,24 @@ public class CommandeService {
 
         return commandes.map(this::convertToResponse);
     }
+    public Commande annulerCommande(String commandeId, String userId) {
+        Commande commande = getCommandeById(commandeId, userId, RoleUtilisateur.CLIENT);
 
+        // Vérifier que la commande appartient au client
+        if (!commande.getClientId().equals(userId)) {
+            throw new UnauthorizedException("Vous ne pouvez pas annuler cette commande");
+        }
+
+        // Vérifier que le statut permet l'annulation
+        if (commande.getStatut() != StatutCommande.EN_ATTENTE) {
+            throw new IllegalStateException(
+                    "Vous ne pouvez annuler que les commandes en attente"
+            );
+        }
+
+        commande.setStatut(StatutCommande.ANNULEE);
+        return commandeRepository.save(commande);
+    }
     public Commande updateStatutCommande(String id, StatutCommande nouveauStatut,
                                          String userId, RoleUtilisateur userRole) {
         if (userRole == RoleUtilisateur.CLIENT) {
