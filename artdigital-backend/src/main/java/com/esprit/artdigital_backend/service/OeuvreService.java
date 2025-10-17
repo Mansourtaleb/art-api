@@ -27,6 +27,7 @@ public class OeuvreService {
 
     @Autowired
     private UtilisateurService utilisateurService;
+
     @Autowired
     private CategorieRepository categorieRepository;
 
@@ -37,19 +38,19 @@ public class OeuvreService {
 
         System.out.println("✅ Catégorie trouvée: " + categorie.getNom() + " (ID: " + categorie.getId() + ")");
 
-        // Créer l'œuvre avec le NOM de la catégorie (pas l'ID !)
+        // Créer l'œuvre avec le NOM de la catégorie
         Oeuvre oeuvre = new Oeuvre(
                 request.getTitre(),
                 request.getDescription(),
-                categorie.getNom(), // ← IMPORTANT : Nom, pas ID
+                categorie.getNom(), // ← NOM de la catégorie
                 request.getPrix(),
                 request.getQuantiteDisponible(),
                 artisteId,
                 null
         );
 
-        // Associer la référence MongoDB
-        oeuvre.setCategorieRef(categorie);
+        // ✅ CORRECTION : Ne plus associer categorieRef (supprimé du modèle)
+        // oeuvre.setCategorieRef(categorie); ← LIGNE SUPPRIMÉE
 
         // Images
         if (request.getImages() != null && !request.getImages().isEmpty()) {
@@ -161,7 +162,8 @@ public class OeuvreService {
                 oeuvre.getPrix(),
                 oeuvre.getQuantiteDisponible(),
                 oeuvre.getArtisteId(),
-                oeuvre.getArtisteNom(),                oeuvre.getImages(),
+                oeuvre.getArtisteNom(),
+                oeuvre.getImages(),
                 oeuvre.getStatut(),
                 oeuvre.getDateCreation(),
                 oeuvre.getAvis(),
