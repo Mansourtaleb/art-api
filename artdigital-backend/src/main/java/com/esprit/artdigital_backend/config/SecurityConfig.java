@@ -42,7 +42,10 @@ public class SecurityConfig {
                         // Auth endpoints - public
                         .requestMatchers("/api/auth/**").permitAll()
 
-                        // Oeuvres - GET public, POST/PUT/DELETE protégé (sauf avis)
+                        // Panier - Client uniquement
+                        .requestMatchers("/api/panier/**").hasRole("CLIENT")
+
+                        // Oeuvres - GET public, POST/PUT/DELETE protégé
                         .requestMatchers(HttpMethod.POST, "/api/oeuvres/*/avis").hasRole("CLIENT")
                         .requestMatchers(HttpMethod.GET, "/api/oeuvres/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/oeuvres/**").hasAnyRole("ARTISTE", "ADMIN")
@@ -57,33 +60,19 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/bannieres/actives").permitAll()
                         .requestMatchers("/api/bannieres/**").hasRole("ADMIN")
 
-                        // Packs - GET public, autres protégés
-                        .requestMatchers(HttpMethod.GET, "/api/packs/**").permitAll()
-                        .requestMatchers("/api/packs/**").hasRole("ADMIN")
-
-                        // Variantes - GET public, autres protégés
-                        .requestMatchers(HttpMethod.GET, "/api/variantes/**").permitAll()
-                        .requestMatchers("/api/variantes/**").hasAnyRole("ADMIN", "ARTISTE")
-
-                        // Designs - Consultation pour tous, gestion admin
-                        .requestMatchers(HttpMethod.GET, "/api/designs/**").permitAll()
-                        .requestMatchers("/api/designs/**").hasRole("ADMIN")
-
                         // Frais de livraison - Consultation pour tous, gestion admin
                         .requestMatchers(HttpMethod.GET, "/api/frais-livraison/**").permitAll()
                         .requestMatchers("/api/frais-livraison/**").hasRole("ADMIN")
 
-                        // Commandes - Authentifié requis (gestion dans controller)
+                        // Commandes - Authentifié requis
                         .requestMatchers("/api/commandes/**").authenticated()
 
-                        // Produits personnalisés - Authentifié requis (gestion dans controller)
-                        .requestMatchers("/api/produits-personnalises/**").authenticated()
-
-                        // Utilisateurs - Authentifié requis (gestion dans controller)
+                        // Utilisateurs - Authentifié requis
                         .requestMatchers("/api/utilisateurs/**").authenticated()
 
                         // Files - GET public, POST/DELETE protégé
-                        .requestMatchers("/api/files/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()
+                        .requestMatchers("/api/files/**").authenticated()
 
                         // Swagger
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()

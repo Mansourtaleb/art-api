@@ -1,0 +1,519 @@
+{
+  "info": {
+    "name": "ART STORE - API Complete",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "client_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. AUTH",
+      "item": [
+        {
+          "name": "1.1 Register Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Admin ArtStore\",\n  \"email\": \"admin@artstore.tn\",\n  \"motDePasse\": \"Admin123!\",\n  \"role\": \"ADMIN\",\n  \"telephone\": \"55682157\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "1.2 Verify Email Admin (SKIP - Auto verify in DB)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/verify-email?token=YOUR_TOKEN",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "verify-email"],
+              "query": [{"key": "token", "value": "YOUR_TOKEN"}]
+            }
+          }
+        },
+        {
+          "name": "1.3 Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('admin_token', jsonData.token);",
+                  "    pm.collectionVariables.set('admin_token', jsonData.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@artstore.tn\",\n  \"motDePasse\": \"Admin123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "1.4 Register Client",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Mohamed Ben Ali\",\n  \"email\": \"mohamed@test.com\",\n  \"motDePasse\": \"Test123!\",\n  \"role\": \"CLIENT\",\n  \"telephone\": \"98765432\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "1.5 Login Client",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('client_token', jsonData.token);",
+                  "    pm.collectionVariables.set('client_token', jsonData.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"mohamed@test.com\",\n  \"motDePasse\": \"Test123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. CATEGORIES",
+      "item": [
+        {
+          "name": "2.1 Create Categorie",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Cadeaux Personnalisés\",\n  \"description\": \"Mugs, coussins, tableaux photo\",\n  \"imageUrl\": \"https://images.unsplash.com/photo-1513885535751-8b9238bd345a?w=500\",\n  \"actif\": true,\n  \"ordre\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/categories",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categories"]
+            }
+          }
+        },
+        {
+          "name": "2.2 Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/categories",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categories"]
+            }
+          }
+        },
+        {
+          "name": "2.3 Get Active Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/categories/actives",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categories", "actives"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. PRODUITS",
+      "item": [
+        {
+          "name": "3.1 Create Produit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titre\": \"Mug Personnalisé Blanc\",\n  \"description\": \"Mug céramique 330ml avec votre photo\",\n  \"categorieId\": \"REMPLACER_PAR_ID_CATEGORIE\",\n  \"prix\": 15.500,\n  \"quantiteDisponible\": 100,\n  \"images\": [\"https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=500\"],\n  \"statut\": \"DISPONIBLE\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/oeuvres",
+              "host": ["{{base_url}}"],
+              "path": ["api", "oeuvres"]
+            }
+          }
+        },
+        {
+          "name": "3.2 Get All Produits",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/oeuvres",
+              "host": ["{{base_url}}"],
+              "path": ["api", "oeuvres"]
+            }
+          }
+        },
+        {
+          "name": "3.3 Get Produit By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/oeuvres/ID_PRODUIT",
+              "host": ["{{base_url}}"],
+              "path": ["api", "oeuvres", "ID_PRODUIT"]
+            }
+          }
+        },
+        {
+          "name": "3.4 Filter by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/oeuvres?categorie=Cadeaux Personnalisés",
+              "host": ["{{base_url}}"],
+              "path": ["api", "oeuvres"],
+              "query": [{"key": "categorie", "value": "Cadeaux Personnalisés"}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. PANIER",
+      "item": [
+        {
+          "name": "4.1 Get Mon Panier",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{client_token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/panier",
+              "host": ["{{base_url}}"],
+              "path": ["api", "panier"]
+            }
+          }
+        },
+        {
+          "name": "4.2 Ajouter au Panier",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{client_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"oeuvreId\": \"ID_PRODUIT\",\n  \"quantite\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/panier/items",
+              "host": ["{{base_url}}"],
+              "path": ["api", "panier", "items"]
+            }
+          }
+        },
+        {
+          "name": "4.3 Update Quantité",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{client_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantite\": 3\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/panier/items/ID_PRODUIT",
+              "host": ["{{base_url}}"],
+              "path": ["api", "panier", "items", "ID_PRODUIT"]
+            }
+          }
+        },
+        {
+          "name": "4.4 Retirer du Panier",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{client_token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/panier/items/ID_PRODUIT",
+              "host": ["{{base_url}}"],
+              "path": ["api", "panier", "items", "ID_PRODUIT"]
+            }
+          }
+        },
+        {
+          "name": "4.5 Vider Panier",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{client_token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/panier",
+              "host": ["{{base_url}}"],
+              "path": ["api", "panier"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. COMMANDES",
+      "item": [
+        {
+          "name": "5.1 Create Commande",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{client_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"produits\": [\n    {\n      \"oeuvreId\": \"ID_PRODUIT\",\n      \"quantite\": 2\n    }\n  ],\n  \"adresseLivraison\": {\n    \"nom\": \"Mohamed Ben Ali\",\n    \"telephone\": \"98765432\",\n    \"adresse\": \"Rue de la Liberté\",\n    \"ville\": \"Bizerte\",\n    \"codePostal\": \"7000\",\n    \"pays\": \"Tunisie\",\n    \"parDefaut\": true\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/commandes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "commandes"]
+            }
+          }
+        },
+        {
+          "name": "5.2 Get Mes Commandes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{client_token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/commandes/mes-commandes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "commandes", "mes-commandes"]
+            }
+          }
+        },
+        {
+          "name": "5.3 Get All Commandes (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/commandes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "commandes"]
+            }
+          }
+        },
+        {
+          "name": "5.4 Update Statut (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"statut\": \"CONFIRMEE\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/commandes/ID_COMMANDE/statut",
+              "host": ["{{base_url}}"],
+              "path": ["api", "commandes", "ID_COMMANDE", "statut"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. FRAIS LIVRAISON",
+      "item": [
+        {
+          "name": "6.1 Create Frais",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"zone\": \"Bizerte\",\n  \"villesIncluses\": [\"Bizerte\", \"Menzel Bourguiba\"],\n  \"frais\": 7.000,\n  \"montantLivraisonGratuite\": 150.000,\n  \"delaiJours\": 2,\n  \"actif\": true,\n  \"priorite\": 10\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/frais-livraison",
+              "host": ["{{base_url}}"],
+              "path": ["api", "frais-livraison"]
+            }
+          }
+        },
+        {
+          "name": "6.2 Get All Frais",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/frais-livraison",
+              "host": ["{{base_url}}"],
+              "path": ["api", "frais-livraison"]
+            }
+          }
+        },
+        {
+          "name": "6.3 Calculer Frais",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/frais-livraison/calculer?ville=Bizerte&montantCommande=100",
+              "host": ["{{base_url}}"],
+              "path": ["api", "frais-livraison", "calculer"],
+              "query": [
+                {"key": "ville", "value": "Bizerte"},
+                {"key": "montantCommande", "value": "100"}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. PROFIL",
+      "item": [
+        {
+          "name": "7.1 Get Mon Profil",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{client_token}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/utilisateurs/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "utilisateurs", "me"]
+            }
+          }
+        },
+        {
+          "name": "7.2 Update Profil",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{client_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Mohamed Ben Ali Updated\",\n  \"telephone\": \"99887766\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/utilisateurs/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "utilisateurs", "me"]
+            }
+          }
+        },
+        {
+          "name": "7.3 Ajouter Adresse",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{client_token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Mohamed Ben Ali\",\n  \"telephone\": \"98765432\",\n  \"adresse\": \"Rue de la Liberté, Immeuble El Amen\",\n  \"ville\": \"Bizerte\",\n  \"codePostal\": \"7000\",\n  \"pays\": \"Tunisie\",\n  \"parDefaut\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/utilisateurs/me/adresses",
+              "host": ["{{base_url}}"],
+              "path": ["api", "utilisateurs", "me", "adresses"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

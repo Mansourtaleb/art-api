@@ -36,14 +36,17 @@ public class CommandeService {
     @Autowired
     private UtilisateurService utilisateurService;
 
+    @Autowired
+    private FraisLivraisonService fraisLivraisonService;
+
     @Transactional
     public Commande creerCommande(CommandeRequest request, String userId) {
         Utilisateur client = utilisateurService.getUtilisateurById(userId);
 
         List<ProduitCommande> produits = new ArrayList<>();
-        BigDecimal montantTotal = BigDecimal.ZERO;
+        BigDecimal sousTotalProduits = BigDecimal.ZERO;
 
-        // Vérifier disponibilité et calculer total
+        // Vérifier disponibilité et calculer sous-total produits
         for (CommandeRequest.ProduitCommandeRequest produitReq : request.getProduits()) {
             Oeuvre oeuvre = oeuvreService.getOeuvreById(produitReq.getOeuvreId());
 
@@ -65,15 +68,22 @@ public class CommandeService {
             );
             produits.add(produit);
 
-            // Calculer montant
+            // Calculer montant produit
             BigDecimal montantProduit = oeuvre.getPrix()
                     .multiply(BigDecimal.valueOf(produitReq.getQuantite()));
-            montantTotal = montantTotal.add(montantProduit);
+            sousTotalProduits = sousTotalProduits.add(montantProduit);
 
             // Déduire du stock
             oeuvre.setQuantiteDisponible(oeuvre.getQuantiteDisponible() - produitReq.getQuantite());
             oeuvreService.updateOeuvre(oeuvre.getId(), oeuvre, oeuvre.getArtisteId(), RoleUtilisateur.ADMIN);
         }
+
+        // ✅ CALCUL FRAIS LIVRAISON
+        String ville = request.getAdresseLivraison().getVille();
+        BigDecimal fraisLivraison = fraisLivraisonService.calculerFrais(ville, sousTotalProduits);
+
+        // ✅ MONTANT TOTAL = Produits + Livraison
+        BigDecimal montantTotal = sousTotalProduits.add(fraisLivraison);
 
         // Créer commande
         Commande commande = new Commande(
